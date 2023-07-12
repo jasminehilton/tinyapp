@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+   <!-- Bootstrap CSS -->
+   <link
+   rel="stylesheet"
+   href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+   integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+   crossorigin="anonymous"
+ />
+</head>
+<body>
+  <%- include('partials/_header') %>
+<form class="form-inline" action="/register" method="POST">
+  <div class="form-group mb-2"> 
+    <label for="emailSignup">Enter an Email:</label>
+    <input
+      class="form-control"
+      type="email"
+      name="email"
+      placeholder="example@example.com"
+      style="width: 300px; margin: 1em"
+    />
+    <label for="passwordSignup">Enter a Password:</label>
+    <input
+    class="form-control"
+    type="password"
+    name="password"
+    placeholder="secret123"
+    style="width: 300px; margin: 1em"
+  />
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+</body>
+</html>
+
+
+
