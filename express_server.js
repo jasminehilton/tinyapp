@@ -59,6 +59,15 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect(`/urls`);
 });
 
+app.post("/urls/:id", (req, res) => {
+  console.log("here");
+  const shortUrl = req.params.id;
+  const updatedLongUrl = req.body.longURL;
+  console.log("updatedLongUrl ", updatedLongUrl);
+  urlDatabase[shortUrl] = updatedLongUrl;
+  res.redirect("/urls");
+});
+
 const generateRandomString = function () {
   return (+new Date() * Math.random()).toString(36).substring(0, 6);
 };
