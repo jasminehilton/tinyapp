@@ -1,8 +1,10 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.set("view engine", "ejs");
 
 const urlDatabase = {
@@ -23,7 +25,10 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"],
+  };
   res.render("urls_index", templateVars);
 });
 
@@ -32,7 +37,10 @@ app.listen(PORT, () => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = {
+    username: req.cookies["username"],
+  };
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
