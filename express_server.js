@@ -128,6 +128,7 @@ app.post("/logout", (req, res) => {
   // res.clearCookie("username");                        //change this
   res.clearCookie("email");
   res.redirect("/urls");
+// possibly put the js that is in the header file here one day
 });
 
 app.post("/register", (req, res) => {
@@ -135,13 +136,78 @@ app.post("/register", (req, res) => {
   // const username = req.body.username;                        //change this
   const email = req.body.email;
   const password = req.body.password;
+  
+  // console.log(email);
+  if (!email || !password) {
+    return res.status(400).send(`no email and/or password was provided`);
+  }
+
+
+  let foundEmail = null;
+
+  for (const userId in users) {
+    // console.log("email=",email, "users[userId].email=",users[userId].email, "users=",users, "userId=",userId);
+    const user = users[userId];
+    if (user.email === email) {
+      console.log(' found a matching email');
+      console.log("email=" , email, "user=" , user, "users[userId]=" ,users[userId]);
+      return res.status(400).send("cant use the same email");
+    }
+  }
+
   users[id] = {
     id: id,
     // username: username,                        //change this
     email: email,
     password: password,
   };
-  console.log(users);
+
+
+
   res.cookie("user_id", id);
   res.redirect("/urls",);
 });
+
+
+
+// // POST /login
+// app.post('/login', (req, res) => {
+//   // pull the data off the body object
+//   const username = req.body.username;
+//   const password = req.body.password;
+
+//   // did they NOT give us a username or password
+//   if (!username || !password) {
+//     res.status(400);
+//     return res.send('you must provide a username and password');
+//   }
+
+//   // look up the user based on their username
+//   let foundUser = null;
+
+//   for (const userId in users) {
+//     const user = users[userId];
+//     if (user.username === username) {
+//       // yay! we found our user!
+//       foundUser = user;
+//     }
+//   }
+
+//   // did we NOT find a user?
+//   if (!foundUser) {
+//     return res.status(400).send('no user with that username found');
+//   }
+
+//   // compare the passwords (do they NOT match)
+//   if (foundUser.password !== password) {
+//     return res.status(400).send('passwords do not match');
+//   }
+
+//   // happy path!!!
+//   // set a cookie
+//   res.cookie('userId', foundUser.id);
+
+//   // redirect the user somewhere
+//   res.redirect('/protected');
+// });
+
