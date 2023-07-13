@@ -89,7 +89,10 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("_login");
+  const templateVars = {
+    email: req.cookies["email"],
+  };
+  res.render("_login", templateVars);
 });
 
 //============================================= POST
@@ -116,14 +119,37 @@ app.post("/urls/:id", (req, res) => {
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
-  res.cookie("email", email);
-  res.redirect("/urls");
+  const password = req.body.password;
+
+  // make sure email or password are not empty
+  if (!email || !password) {
+    return res.status(400).send(`no email and/or password was provided`);
+  }
+
+  // make sure that the email doesn't match else "its a match"
+  for (const userId in users) {
+    const user = users[userId];
+    // if email is found then compare the password too
+    if (user.email === email && user.password === password) {
+      res.cookie("email", email);
+      res.cookie("user_id", user.id);
+      res.redirect("/urls");
+    }
+    // if email is there but the password is incorrect then send back 403
+    else if (user.email === email && user.password !== password) {
+      res.status(403).send("email matches, password incorrect");
+    }
+  }
+
+  res.status(403).send("email does not exist");
+
 });
 
 app.post("/logout", (req, res) => {
   const email = req.body.email;
-  // res.clearCookie("email"); // this cookie is the problem!!! it is being cleared upon "logout" and then "email" is not defined. change it to userid maybe or some other identifier?
-  res.redirect("/urls");
+  res.clearCookie("email");
+  res.clearCookie("user_id");
+  res.redirect("/login");
   // possibly put the js that is in the header file here one day
 
 });
