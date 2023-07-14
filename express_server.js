@@ -1,10 +1,10 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
 const cookieSession = require("cookie-session");
 // const keygrip = require("keygrip")
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080;
 const { getUserByEmail } = require("./helpers");
 //============================================= USE
 
@@ -47,7 +47,6 @@ const users = {
 };
 
 const generateRandomString = function () {
-  // Math.random().tostring(36).substring(2, 5); // alternative generator
   return (+new Date() * Math.random()).toString(36).substring(0, 6);
 };
 
@@ -64,22 +63,10 @@ const urlsForUser = function (id) {
 //============================================= LISTEN
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`TinyApp is listening on port ${PORT}!`);
 });
 
 //============================================= GET
-
-app.get("/", (req, res) => {
-  return res.send("Hello!");
-});
-
-app.get("/urls.json", (req, res) => {
-  return res.json(urlDatabase);
-});
-
-app.get("/hello", (req, res) => {
-  return res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
 
 app.get("/urls", (req, res) => {
   const userID = req.session.user_id;
@@ -128,7 +115,7 @@ app.get("/register", (req, res) => {
   const templateVars = {
     email: req.session.email,
   };
-  
+
   if(templateVars.email) {
     return res.redirect("/urls"); 
   }
@@ -182,7 +169,6 @@ app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  // // make sure email or password are not empty
   if (!email || !password) {
     return res.status(400).send(`no email and/or password was provided`);
   }
@@ -198,7 +184,7 @@ app.post("/login", (req, res) => {
     req.session.user_id = user.id;
     return res.redirect("/urls");
   } else {
-    return res.status(403); // if email is there but the password is incorrect then send back 403
+    return res.status(403);
   }
 });
 
@@ -207,7 +193,6 @@ app.post("/logout", (req, res) => {
   req.session.user_id = "";
   req.session.email = "";
   return res.redirect("/login");
-  // possibly put the js that is in the header file here one day
 });
 
 app.post("/register", (req, res) => {
@@ -215,7 +200,6 @@ app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  // // make sure email or password are not empty
   if (!email || !password) {
     return res.status(400).send(`no email and/or password was provided`);
   }
@@ -226,7 +210,6 @@ app.post("/register", (req, res) => {
     return res.status(400).send("cant use the same email");
   }
 
-  // add the unique user in the users list
   users[id] = {
     id: id,
     email: email,
