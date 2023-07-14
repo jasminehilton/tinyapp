@@ -51,10 +51,10 @@ const generateRandomString = function () {
   return (+new Date() * Math.random()).toString(36).substring(0, 6);
 };
 
-const urlsForUser = function (userID) {
+const urlsForUser = function (id) {
   let userUrls = {};
   for (let shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === userID) {
+    if (urlDatabase[shortURL].userID === id) {
       userUrls[shortURL] = urlDatabase[shortURL];
     }
   }
@@ -128,6 +128,10 @@ app.get("/register", (req, res) => {
   const templateVars = {
     email: req.session.email,
   };
+  
+  if(templateVars.email) {
+    return res.redirect("/urls"); 
+  }
   return res.render("_signup", templateVars);
 });
 
@@ -135,6 +139,9 @@ app.get("/login", (req, res) => {
   const templateVars = {
     email: req.session.email,
   };
+  if(templateVars.email) {
+    return res.redirect("/urls"); 
+  }
   return res.render("_login", templateVars);
 });
 
